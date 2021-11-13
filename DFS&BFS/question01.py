@@ -1,47 +1,49 @@
-""""""
 """
-- 스택 자료구조 : 선입후출 -> 박스쌓기, 입구와 출구가 동일함
-    - 파이썬은 list의 append와 pop을 이용하여 구현할 수 있다.(시간복잡도는 O(1))
+음료수 얼려 먹기
+- 연결 요소 찾기
 
-- 큐 자료구조 : 선입선출 -> 입구와 출구가 모두 뚫려있는 터널과 같은 형태
-    - 파이썬은 deque를 사용하도록 하자.
-    - 삽입 : append
-    - 삭제 : popleft
-    
-- 재귀함수(Recursive Function) : 자기 자신을 다시 호출하는 함수
+세로길이 N과 가로길이 M이 주어진다.
+구멍이 뚫려있으면 0, 뚫려있지 않다면 1
 """
 
-def recursive_function(i):
-    if i == 100:
-        return
-    print(i, '번째 재귀함수에서', i + 1, '번째 재귀함수를 호출합니다.')
-    recursive_function(i + 1)
-    print(i, '번째 재귀함수를 종료합니다.')
+"""
+그래프 형태로 모델링할 수 있다.
 
-recursive_function(1)
+DFS를 활용하는 알고리즘
+"""
 
-# DFS 소스코드 예제(재귀함수 사용)
-def dfs(graph, v, visited):
-    # 현재 노드를 방문 처리
-    visited[v] = True
-    print(v, end=' ')
-    # 현재 노드와 연결된 다른 노드를 재귀적으로 방문
-    for i in graph[v]:
-        if not visited[i]:
-            dfs(graph, i, visited)
 
-graph = [
-    [],
-    [2, 3, 8],
-    [1, 7],
-    [1, 4, 5],
-    [3, 5],
-    [3, 4],
-    [7],
-    [2, 6, 8],
-    [1, 7]
-]
+n, m = map(int, input().split())
 
-visited = [False] * 9
+graph = []
+for i in range(n):
+    graph.append(list(map(int, input())))
 
-dfs(graph, 1, visited)
+
+# DFS로 특정 노드를 방문하고, 연결된 모든 노드들도 방문
+def dfs(x, y):
+    # 주어진 범위를 벗어나는 경우에는 즉시 종료
+    if x <= -1 or x >= n or y <= -1 or y >= m:
+        return False
+    # 현재 노드를 아직 방문하지 않았다면
+    if graph[x][y] == 0:
+        # 해당 노드 방문 처리
+        graph[x][y] = 1
+        # 상, 하, 좌, 우의 위치들도 모두 재귀적으로 호출
+        dfs(x - 1, y)
+        dfs(x, y - 1)
+        dfs(x + 1, y)
+        dfs(x, y + 1)
+        return True
+    return False
+
+result = 0
+for i in range(n):
+    for j in range(m):
+        if dfs(i, j):
+            result += 1
+
+print(result)
+
+
+
